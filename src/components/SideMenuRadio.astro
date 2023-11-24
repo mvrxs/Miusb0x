@@ -1,0 +1,33 @@
+---
+import type { FMRadio } from "@/lib/radioData";
+
+interface Props {
+  fmRadio: FMRadio;
+}
+
+const { fmRadio } = Astro.props as Props;
+
+
+const { radioId, radioFreq, radioTitle, radioCover } = fmRadio
+
+---
+<a
+  href={`/fmRadio/${radioId}`}
+  class="radios-item flex relative p-2  overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-700">
+  <picture class="h-12 w-12 flex-none">
+      <img
+      src={radioCover}
+        alt={`Cover of ${radioTitle} by ${radioFreq}`}
+        class="object-cover w-full h-full rounded-md">
+  </picture> 
+
+  <div class="flex flex-auto flex-col truncate"> <!-- TRUNCATE ES PARA POJNER ... SI ES MUY LARGO -->
+      <h4 class="text-white text-sm">
+        {radioTitle}
+      </h4>
+  
+      <span class="text-xs text-gray-400">
+        {radioFreq}
+      </span>
+    </div>
+</a>

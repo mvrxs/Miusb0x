@@ -1,0 +1,16 @@
+---
+const { search, onSearch } = Astro.props;
+
+function handleSearch(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value;
+    onSearch(searchTerm);
+}
+---
+
+<input
+    type="text"
+    placeholder="Search songs..."
+    value={search}
+    oninput="{handleSearch}"
+    class="border p-2 rounded-md bg-zinc-500 text-white"
+/>
