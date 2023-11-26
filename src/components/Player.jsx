@@ -106,6 +106,9 @@ const SongControl = ({ audio }) => {
                 onValueChange={(value) => {
                     const [newCurrentTime] = value
                     audio.current.currentTime = newCurrentTime
+                    if (shufflePending) {
+                        handleClickShuffle(); // Llamar a handleClickShuffle al cambiar el tiempo
+                    }
                 }}
             />
 
@@ -115,7 +118,6 @@ const SongControl = ({ audio }) => {
         </div>
     )
 }
-
 
 
 /**
@@ -163,6 +165,8 @@ const VolumeControl = () => {
 
 export function Player() {
     const { currentMusic, isPlaying, setIsPlaying, volume, nextSong, prevSong, shuffle } = usePlayerStore(state => state)
+    const [isShuffleActive, setShuffleActive] = useState(false);
+    const [shufflePending, setShufflePending] = useState(false);
     const audioRef = useRef()
 
     useEffect(() => {
@@ -186,6 +190,13 @@ export function Player() {
         }
     }, [currentMusic])
 
+    useEffect(() => {
+        if (shufflePending) {
+            setShuffleActive(true);
+            setShufflePending(false);
+        }
+    }, [shufflePending]);
+
 
     const handleClickPrev = () => {
         prevSong()
@@ -198,14 +209,13 @@ export function Player() {
         nextSong()
     }
 
-    const [isShuffleActive, setShuffleActive] = useState(false);
     const [isRepeatActive, setRepeatActive] = useState(false);
     const [isArtitstActive, setArtitstActive] = useState(false);
     const [isPopupOpen, setPopupOpen] = useState(false);
 
     const handleClickShuffle = () => {
         shuffle()
-        setShuffleActive(!isShuffleActive);
+        setShuffleActive(true);
     }
 
     const handleClickRepeat = () => {
@@ -227,10 +237,11 @@ export function Player() {
                 <div className="flex justify-center flex-col items-center">
                     <div className={`flex ${currentMusic.song ? 'justify-center' : 'justify-between'} gap-4`}>
 
-                        {/* currentMusic.song && */ (
+                        {/* currentMusic.song && */ (/* button className={`p-2 ${isShuffleActive ? 'text-green-500' : ''}`} onClick={handleClickShuffle}> <Shuffle /> </button> */
                             <button className={`p-2 ${isShuffleActive ? 'text-green-500' : ''}`} onClick={handleClickShuffle}>
                                 <Shuffle />
                             </button>
+
                         )}
 
                         {/* currentMusic.song && */ (
@@ -265,11 +276,11 @@ export function Player() {
                     </button>
                 )}
             </div>
-             <div className={`bg-zinc-0 rounded-md p-0 w-0`}> 
-                <div className={`popup ${isPopupOpen ? 'open fixed transform -translate-x-1/2 z-50': 'hidden'}`}>
-                    <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)} transition:persist/>
+            <div className={`bg-zinc-0 rounded-md p-0 w-0`}>
+                <div className={`popup ${isPopupOpen ? 'open fixed transform -translate-x-1/2 z-50' : 'hidden'}`}>
+                    <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)} transition: persist />
                 </div>
-             </div> 
+            </div>
             <div className="grid place-content-center">
                 <VolumeControl />
             </div>

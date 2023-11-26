@@ -16,7 +16,6 @@ export const usePlayerStore = create((set) => ({
   }),
 
 
-
   prevSong: () => set((state) => {
     const currentTime = state.currentMusic.song.currentTime || 0;
     const currentIndex = state.currentMusic.songs.findIndex(song => song.id === state.currentMusic.song.id);
@@ -48,10 +47,32 @@ export const usePlayerStore = create((set) => ({
   }),
 
 
+  /*   shuffle: () => set((state) => {
+      // Obtener una lista aleatoria de canciones
+      const shuffledSongs = [...state.currentMusic.songs].sort(() => Math.random() - 0.5);
+  
+      // Encontrar el índice de la canción actual en la lista original
+      const currentIndex = state.currentMusic.songs.findIndex(song => song.id === state.currentMusic.song.id);
+  
+      // Encontrar el índice de la canción actual en la lista aleatoria
+      const newIndex = shuffledSongs.findIndex(song => song.id === state.currentMusic.song.id);
+  
+      // Si la canción actual no está en la lista aleatoria, reproducir la primera canción aleatoria
+      const nextIndex = newIndex === -1 ? 0 : (newIndex + 1) % shuffledSongs.length;
+      const nextSong = shuffledSongs[nextIndex];
+  
+      return { currentMusic: { ...state.currentMusic, songs: shuffledSongs, song: nextSong } };
+    }),  */
 
   shuffle: () => set((state) => {
-    // Obtener una lista aleatoria de canciones
-    const shuffledSongs = [...state.currentMusic.songs].sort(() => Math.random() - 0.5);
+    let shuffledSongs;
+
+    if (state.isShuffleActive) {
+      // Obtener una lista aleatoria de canciones
+      shuffledSongs = [...state.currentMusic.songs].sort(() => Math.random() - 0.5);
+    } else {
+      shuffledSongs = [...state.currentMusic.songs];
+    }
 
     // Encontrar el índice de la canción actual en la lista original
     const currentIndex = state.currentMusic.songs.findIndex(song => song.id === state.currentMusic.song.id);
@@ -63,7 +84,10 @@ export const usePlayerStore = create((set) => ({
     const nextIndex = newIndex === -1 ? 0 : (newIndex + 1) % shuffledSongs.length;
     const nextSong = shuffledSongs[nextIndex];
 
-    return { currentMusic: { ...state.currentMusic, songs: shuffledSongs, song: nextSong } };
-  }), 
+    return {
+      currentMusic: { ...state.currentMusic, songs: shuffledSongs, song: nextSong },
+      isShuffleActive: !state.isShuffleActive, // Alternar el estado de shuffle
+    };
+  }),
 
 }))

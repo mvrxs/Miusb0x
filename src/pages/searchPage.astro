@@ -1,0 +1,47 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SearchBar from "@/components/SearchBar.astro";
+import MusicsTable from "@/components/MusicsTable.astro";
+import { connectToDatabase } from "@/lib/db";
+
+export let searchQuery = "";
+  export let handleSearch = async (term: string) => {
+    searchQuery = term;
+
+    try {
+      const db = await connectToDatabase();
+      const songsCollection = db.collection("songs");
+
+      // Realiza una búsqueda de texto en el campo "title" de la colección de canciones
+      const results = await songsCollection
+        .find({ title: { $regex: new RegExp(term, "i") } })
+        .toArray();
+
+      // Actualiza los resultados de la búsqueda
+      searchResults = results;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  export let searchResults = [];
+---
+
+<Layout title="search">
+  <div class="flex flex-col h-full bg-zinc-900">
+    <div class="p-6">
+      <SearchBar search={searchQuery} onSearch={handleSearch} />
+    </div>
+    <div class="p-6">
+      {searchResults.length > 0 ? (
+        <div>
+          <h1 class="text-2xl font-bold mb-4">
+            Search Results for {searchQuery}
+          </h1>
+          <MusicsTable songs={searchResults} />
+        </div>
+      ) : (
+        <p>No results found.</p>
+      )}
+    </div>
+  </div>
+</Layout>

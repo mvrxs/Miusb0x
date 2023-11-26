@@ -2,16 +2,17 @@
 import LibraryIcon from "@/icons/Library.astro";
 import HomeIcon from "@/icons/Home.astro";
 import SearchIcon from "@/icons/Search.astro";
+import More from "@/icons/More.astro";
 import SpotifyIcon from "@/icons/Spotify.astro";
 import RadioIcon from "@/icons/Radio.astro";
 import SideMenuItem from "./SideMenuItem.astro";
 import SideMenuCard from "./SideMenuCard.astro";
 import SideMenuRadio from "./SideMenuRadio.astro";
-import SearchBar from "./SearchBar.astro";
 
 
 import { playlists } from "@/lib/data";
 import { fmRadios } from "@/lib/radioData";
+import Search from "@/icons/Search.astro";
 ---
 
 <nav class="flex flex-col flex-1 gap-2">
@@ -26,11 +27,15 @@ import { fmRadios } from "@/lib/radioData";
                  Home 
             </SideMenuItem>
 
-            <SideMenuItem href="/#">
+            <SideMenuItem href="/searchPage">
                 <SearchIcon />
-                SearchBar
+                Search
             </SideMenuItem>
 
+            <SideMenuItem href="/aboutPage">
+                <More />
+                About
+            </SideMenuItem>
         </ul>
     </div>
 
